@@ -1,54 +1,77 @@
 <!DOCTYPE html>
-<html>
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Vasylkivbohdan.github.com : ">
+ <html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+ <title>Текстовий редактор</title>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+ <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+ <script type="text/javascript">    
+  function editor(id_frame1){
+      this.id_frame=id_frame1;
+  }   
+  editor.prototype.doStyle=function(style,value){
+        document.getElementById(this.id_frame).contentWindow.document.execCommand(style, false, value);
+        $('iframe').focus();
+  }
+  editor.prototype.onFileSelected=function(event){
+       var selectedFile = event.target.files[0];
+       var reader = new FileReader();
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+       var imgtag =  document.getElementById(this.id_frame).contentWindow.document.createElement("img");
+       imgtag.title = selectedFile.name;
+       imgtag.width = 400;
 
-    <title>Vasylkivbohdan.github.com</title>
-  </head>
+       reader.onload = function(event) {
+          imgtag.src = event.target.result;
+       };
+       document.getElementById(this.id_frame).contentWindow.document.body.appendChild(imgtag);
 
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/VasylkivBohdan">View on GitHub</a>
-
-          <h1 id="project_title">Vasylkivbohdan.github.com</h1>
-          <h2 id="project_tagline"></h2>
-
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>&lt;!DOCTYPE html&gt;</p>
-
-<p>
- </p>
- Editor
+       reader.readAsDataURL(selectedFile);
+  }   
+  function Init(){
+      e=new editor("editor");
+      document.getElementById("editor").contentWindow.document.designMode = "On";
+      $('iframe').focus();
+  }
+ </script>
+  <style>
     img{width: 20px; height: 20px;}
-  
-   Enter text:<br><br><div>
-<br><img alt="big" src="big.png"><img alt="italic" src="italic.png"><img alt="underline" src="underline.gif"><img alt="Unordered" src="Unordered.gif"><img alt="Ordered Decimal" src="Decimal.gif"><img alt="left" src="left.gif"><img alt="center" src="center.gif"><img alt="right" src="right.gif"><img alt="undo" src="undo.png"><img alt="redo" src="redo.png">
-        ArialCalibriConsolasCourierComic Sans MSTimes New Roman101214161820223036</div>
- <br>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
-</html>
+  </style>
+ </head>
+ <body onload="Init()">
+   Введіть текст:<br /><iframe id="editor" width="800" height="400"></iframe><br />
+   <div>    
+        <button onClick="e.doStyle('bold',null);"><img alt="big" src=big.png ></button>
+        <button onClick="e.doStyle('italic',null);"><img alt="italic" src=italic.png ></button>
+        <button onClick="e.doStyle('underline',null);"><img alt="underline" src=underline.gif ></button>
+        <button onclick="e.doStyle('InsertUnorderedList',null);"><img alt="Unordered" src=Unordered.gif></button>
+        <button onclick="e.doStyle('InsertOrderedList',null);"><img alt="Ordered Decimal" src=Decimal.gif></button>
+        <button onClick="e.doStyle('justifyleft',null);"><img alt="left" src=left.gif ></button>
+        <button onClick="e.doStyle('justifycenter',null);"><img alt="center" src=center.gif ></button>
+        <button onClick="e.doStyle('justifyright',null);"><img alt="right" src=right.gif ></button>
+        <button onClick="e.doStyle('undo',null);"><img alt="undo" src=undo.png ></button>
+        <button onClick="e.doStyle('redo',null);"><img alt="redo" src=redo.png ></button>
+        <select onchange="e.doStyle('fontName',this[this.selectedIndex].value)">
+                <option value="Arial">Arial</option>
+                <option value="Calibri">Calibri</option>
+                <option value="Consolas">Consolas</option>
+                <option value="Courier">Courier</option>
+                <option value="Comic Sans MS">Comic Sans MS</option>
+                <option value="Times New Roman">Times New Roman</option>
+        </select>
+        <select onchange="e.doStyle('fontSize',this[this.selectedIndex].value)">
+                <option value=10>10</option>
+                <option value=14>12</option>
+                <option value=20>14</option>
+                <option value=10>16</option>
+                <option value=14>18</option>
+                <option value=20>20</option>
+                <option value=10>22</option>
+                <option value=14>30</option>
+                <option value=20>36</option>
+        </select>
+        <input type="file" onchange="e.onFileSelected(event)">
+ </div>
+ </body>  
+ </html>
